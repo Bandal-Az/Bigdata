@@ -1,0 +1,408 @@
+/* src/styles/web.css  ───── 확장(전체)판 ─────────────────────────
+   - 웹 공통 레이아웃(WebLayout)용 스타일
+   - 활성화(Active) 상태 포함
+   - 반응형(@media) 규칙 포함
+   - AppLayout.css 와 class명이 겹치지 않도록 네임스페이스를 최소화
+-----------------------------------------------------------------*/
+
+:root{
+  --brand:#1a73e8;
+  --text:#1f2a37;
+  --muted:#667085;
+  --bg:#f7f9fc;
+  --card:#fff;
+  --border:#e5ecf5;
+
+  /* 타이포 기본 스케일 */
+  --fs-title:28px;
+  --fs-body:16px;
+  --radius:14px;
+  --shadow:0 8px 18px rgba(0,0,0,.04);
+  --shadow-hover:0 10px 22px rgba(0,0,0,.06);
+}
+
+/* 기본 문서 */
+html,body{ height:100%; }
+body{
+  margin:0;
+  background: var(--bg);
+  color: var(--text);
+  font-size: var(--fs-body);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, Apple SD Gothic Neo, Noto Sans KR, "맑은 고딕", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 링크 공통 */
+a{ color: inherit; }
+
+/* 컨테이너 */
+.container{
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* ── 헤더/네비(WebLayout) ───────────────────────────────────── */
+.header{
+  position: sticky;
+  top: 0; z-index: 10;
+  background: #fff;
+  border-bottom: 2px solid var(--brand);
+}
+.navbar{
+  display:flex; align-items:center;
+  gap:16px; padding: 6px 0;
+}
+.logo {
+  color: var(--brand);
+  font-weight: 900;         /* 더 굵게 */
+  font-size: 22px;          /* 더 크게 */
+  letter-spacing: -0.3px;   /* 살짝 촘촘하게 */
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* 메뉴 리스트 */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-left: 40px;  /* ✅ 로고와의 간격 추가 */
+  list-style: none;
+  padding: 0;
+  flex-wrap: wrap;
+}
+.nav-links a{
+  text-decoration:none;
+  color:#334155;
+  padding:8px 10px;
+  border-radius:8px;
+  transition: background .15s ease, color .15s ease, box-shadow .15s ease;
+}
+/* Hover(요청: 기존 유지) */
+.nav-links a:hover{
+  background:#eef4ff;
+  color:#0b57d0;
+}
+/* ✅ Active(요청: 활성화 표시) */
+.nav-links a.active{
+  background:#e9f1ff;
+  color:#0b57d0;
+  font-weight:700;
+  box-shadow: inset 0 -2px 0 var(--brand);
+}
+
+/* ── 본문 공통 ──────────────────────────────────────────────── */
+.main-content{ padding: 24px 0 48px; }
+.page-title{
+  font-size: var(--fs-title);
+  margin: 6px 0 10px;
+  color: var(--brand);
+  font-weight: 800;
+}
+.intro-text{ color: var(--muted); margin-bottom: 20px; }
+
+/* 카드 그리드 */
+.shortcut-grid{
+  display:grid; gap:14px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+.shortcut-card{
+  display:block; background: var(--card); text-decoration:none; color:inherit;
+  padding:16px; border-radius: var(--radius);
+  border:1px solid var(--border);
+  box-shadow: var(--shadow);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.shortcut-card:hover{
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+.card-icon{ margin-bottom: 8px; }
+.card-title{ font-weight: 700; margin-bottom: 4px; color:#0b57d0; }
+.card-description{ color: var(--muted); font-size: 14px; }
+
+/* 업로드 섹션 */
+.upload-container{
+  margin: 18px 0; padding: 16px;
+  background:#fff; border:1px solid var(--border);
+  border-radius:12px;
+}
+.upload-text{ color: var(--muted); margin-bottom:10px; }
+.upload-button{
+  background: var(--brand); color:#fff; border:0; border-radius:10px;
+  padding:10px 14px; cursor:pointer; font-weight:700;
+}
+.upload-button:hover{ filter: brightness(0.96); }
+
+/* 결과/규칙 */
+.result-box{
+  margin-top: 14px; padding: 12px;
+  background:#f5f8ff; border:1px dashed var(--brand);
+  border-radius:10px;
+}
+.rules-section{ margin-top: 22px; }
+.rules-section h2{ color: var(--brand); margin-bottom: 10px; }
+
+/* 리포트 */
+.report-content{
+  background:#fff; border:1px solid var(--border);
+  border-radius:14px; padding:20px;
+}
+.report-title{ color: var(--brand); margin:0 0 12px; }
+.report-section{ margin: 18px 0; }
+.report-section-title{ margin: 0 0 10px; }
+.image-container{ margin-top: 12px; text-align:center; }
+.image-container img{
+  max-width: 100%;
+  border-radius: 10px;
+  border:1px solid var(--border);
+}
+
+/* 푸터 */
+.footer{
+  margin-top: 36px; padding: 22px 0;
+  color:#6b7280; text-align:center; font-size: 14px;
+  border-top: 1px solid var(--border);
+  background: #fff;
+}
+
+/* ────────────────────────────────────────────────────────────
+   반응형 @media 세트
+   - 홈/상세 페이지 모두 일관된 스케일/간격 유지
+   - 헤더 메뉴는 줄바꿈(wrap) 전략으로 모바일에서도 자연스럽게
+   - AppLayout.css 와는 서로 독립 (클래스명이 다름)
+----------------------------------------------------------------*/
+
+/* ≥1440px: 약간 더 여유 있는 카드/타이포 */
+@media (min-width: 1440px){
+  :root{
+    --fs-title:30px;
+  }
+  .shortcut-grid{
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  }
+}
+
+/* ≤1280px: 컨테이너 공간 최적화 */
+@media (max-width: 1280px){
+  .container{ padding: 0 14px; }
+  .navbar{ gap:14px; padding: 6px 0; }
+}
+
+/* ≤1024px: 타이포/패딩 살짝 축소, 카드 최소폭 조정 */
+@media (max-width: 1024px){
+  :root{
+    --fs-title:26px;
+  }
+  .navbar{ padding: 6px 0; }
+  .nav-links{ gap:12px; }
+  .nav-links a{ padding:7px 9px; }
+
+  .shortcut-grid{
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+  .shortcut-card{ padding:14px; }
+}
+
+/* ≤768px: 모바일/태블릿 공통 */
+@media (max-width: 768px){
+  :root{
+    --fs-title:24px;
+  }
+  .container{ padding: 0 12px; }
+  .navbar{ gap:12px; padding: 6px 0;}
+  .logo{ font-size: 18px; }
+
+  .nav-links{
+    gap:10px;
+  }
+  .nav-links a{
+    padding:6px 8px;
+    font-size: 14px;
+  }
+
+  .main-content{ padding: 20px 0 36px; }
+  .shortcut-grid{
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap:12px;
+  }
+  .shortcut-card{ border-radius:12px; }
+
+  .report-content{ padding:18px; }
+}
+
+/* ≤640px: 작은 폰 고려 – 카드 한 줄 또는 2열 */
+@media (max-width: 640px){
+  .nav-links{
+    /* 두 줄까지 자연스러운 랩핑 */
+    row-gap: 8px;
+  }
+  .page-title{ margin-top: 2px; }
+
+  .shortcut-grid{
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+}
+
+/* ≤480px: 최소 단말 – 타이포/간격 최소화 */
+@media (max-width: 480px){
+  :root{
+    --fs-title:22px;
+  }
+  .navbar{ padding: 6px 0; }
+  .logo{ font-size: 16px; }
+  .nav-links{ gap:8px; }
+  .nav-links a{
+    padding:6px 7px;
+    font-size: 13px;
+    border-radius:7px;
+  }
+
+  .shortcut-grid{
+    grid-template-columns: 1fr; /* 1열 */
+    gap:10px;
+  }
+  .shortcut-card{ padding:14px; }
+
+  .upload-container{ padding:14px; }
+  .result-box{ padding: 10px; }
+  .report-content{ padding:16px; }
+  .footer{ padding:18px 0; }
+}
+
+/* 다크모드 대비(선택적, 시스템 기본 따라가기) */
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0f172a;
+    --text:#e5e7eb;
+    --muted:#94a3b8;
+    --card:#0b1220;
+    --border:#1e293b;
+    --brand:#60a5fa;
+  }
+  .header, .footer{ background:#0b1220; }
+  .nav-links a:hover{ background:#0b294d; color:#93c5fd; }
+  .nav-links a.active{
+    background:#0b294d; color:#93c5fd; box-shadow: inset 0 -2px 0 var(--brand);
+  }
+  .result-box{ background:#0b1d33; }
+}
+
+/* ===========================
+   Baseball News 전용 레이아웃
+   - 좌우 3:2 그리드
+   - 오른쪽 열 상/하 2분할
+   - 각 영역 카드(박스) 스타일
+   =========================== */
+
+.baseball-news-section {
+  /* 섹션 자체는 배경/테두리 없이, 내부 박스들이 카드 역할 */
+  padding: 0;
+  background: transparent;
+  border: 0;
+}
+
+.news-grid {
+  display: grid;
+  grid-template-columns: 3fr 2fr;  /* 좌:우 = 3:2 */
+  gap: 24px;
+  align-items: start;
+}
+
+/* 좌측(뉴스) */
+.news-left { min-width: 0; }
+.news-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+}
+
+/* 우측(일정/순위) – 세로 2분할 */
+.news-right {
+  display: grid;
+  grid-template-rows: 1fr 1fr; /* 상/하 동등 분할 */
+  gap: 20px;
+  min-height: 520px; /* 필요 시 조절 가능 */
+}
+
+/* 각 박스 공통 카드 스타일 */
+.schedule-box,
+.rank-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 내부 스크롤 허용(콘텐츠 길어질 때) */
+.schedule-box .schedule-list,
+.rank-box .table-scroll {
+  overflow: auto;
+}
+
+/* 타이틀/리스트 */
+.news-subtitle {
+  font-weight: 800;
+  font-size: 18px;
+  margin: 0 0 12px;
+  color: var(--brand);
+}
+
+.news-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+.news-list li { margin-bottom: 10px; line-height: 1.5; }
+.news-list a {
+  text-decoration: none;
+  color: #1f2937;
+}
+.news-list a:hover { color: var(--brand); text-decoration: underline; }
+
+/* 일정 리스트(우측 상단) */
+.schedule-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+  font-size: 14px;
+  color: var(--text);
+}
+.schedule-list li { padding: 6px 0; border-bottom: 1px solid var(--border); }
+.schedule-list li:last-child { border-bottom: 0; }
+
+/* 순위 테이블(우측 하단) */
+.table-scroll { overflow-x: auto; }
+.rank-table {
+  width: 100%;
+  font-size: 14px;
+  border-collapse: collapse;
+}
+.rank-table th, .rank-table td {
+  border-bottom: 1px solid var(--border);
+  padding: 6px 8px;
+  text-align: center;
+  white-space: nowrap;
+}
+.rank-table th {
+  background: #f0f4fa;
+  color: #0f172a;
+}
+
+/* 반응형: 1024px 이하에서는 1열 전환 */
+@media (max-width: 1024px) {
+  .news-grid {
+    grid-template-columns: 1fr;
+  }
+  .news-right {
+    grid-template-rows: auto auto; /* 내용 높이만큼 */
+    min-height: 0;
+  }
+}
