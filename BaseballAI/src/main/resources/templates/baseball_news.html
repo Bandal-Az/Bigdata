@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>야구 소식</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f0f4f8; color: #333; margin: 0; padding: 0; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem 1rem; }
+        .header { background-color: #fff; border-bottom: 3px solid #1a73e8; box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; }
+        .logo { font-size: 1.8rem; font-weight: 700; color: #1a73e8; text-decoration: none; }
+        .nav-links { list-style: none; margin: 0; padding: 0; display: flex; }
+        .nav-links li { margin-left: 1.5rem; }
+        .nav-links a { text-decoration: none; color: #555; font-weight: 700; transition: color 0.3s; cursor: pointer; }
+        .nav-links a:hover { color: #1a73e8; }
+
+        .main-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; padding: 3rem 0; align-items: start; }
+        .grid-item { background-color: #fff; border-radius: 15px; padding: 1.5rem; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .left-column { display: flex; flex-direction: column; gap: 2rem; }
+        .grid-item.standings { display: flex; flex-direction: column; height: 100%; }
+        .standings-content { flex-grow: 1; display: flex; flex-direction: column; }
+        .standings-table-container { flex-grow: 1; overflow-y: auto; }
+        .section-title { font-size: 1.5rem; font-weight: 700; color: #1a73e8; margin-bottom: 1rem; border-bottom: 2px solid #1a73e8; padding-bottom: 0.5rem; }
+        .news-list-container { max-height: 250px; overflow-y: auto; padding-right: 1rem; }
+        .news-item { display: block; padding: 0.75rem 0; border-bottom: 1px solid #eee; color: #333; text-decoration: none; }
+        .news-item:hover { background-color: #f9f9f9; }
+        .news-item:last-child { border-bottom: none; }
+        .news-title { font-size: 1rem; font-weight: 600; }
+        .news-date { font-size: 0.85rem; color: #777; margin-top: 0.25rem; }
+
+        /* 새로운 게임 목록 스타일 */
+        .game-list { display: flex; flex-direction: column; gap: 1.5rem; }
+        .game-item { display: flex; align-items: center; padding: 1.25rem; border: 1px solid #eee; border-radius: 10px; background-color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s, box-shadow 0.2s; }
+        .game-item:hover { transform: translateY(-3px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+
+        .game-meta { display: flex; flex-direction: column; align-items: center; text-align: center; width: 100px; font-size: 0.9rem; color: #555; }
+        .game-meta .time { font-weight: 700; color: #333; }
+
+        .game-teams { display: flex; justify-content: space-around; align-items: center; flex-grow: 1; text-align: center; }
+        .team-info { display: flex; flex-direction: column; align-items: center; width: 150px; }
+        .team-logo-img { width: 50px; height: 50px; margin-bottom: 0.5rem; }
+        .team-name { font-size: 1.1rem; font-weight: 700; color: #1a73e8; }
+        .pitcher-name { font-size: 0.9rem; color: #777; margin-top: 0.25rem; }
+
+        .vs-status { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 80px; }
+        .vs-text { font-size: 1.5rem; font-weight: 700; color: #1a73e8; }
+        .game-status { font-size: 0.9rem; color: #f44336; font-weight: 600; margin-top: 0.25rem; }
+
+        .section-title {
+            display: flex;
+            justify-content: space-between; /* 제목과 날짜를 양 끝으로 정렬 */
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a73e8;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #1a73e8;
+            padding-bottom: 0.5rem;
+        }
+
+        .game-date {
+            font-size: 1rem; /* 날짜 글자 크기 조절 */
+            font-weight: 400;
+            color: #777; /* 날짜 색상을 회색으로 */
+        }
+
+        .game-actions { display: flex; align-items: center; gap: 0.5rem; }
+        .broadcast-info { font-size: 0.9rem; color: #1a73e8; font-weight: 600; }
+        .action-button { background-color: #e3f2fd; color: #1a73e8; border: none; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.85rem; cursor: pointer; transition: background-color 0.3s; }
+        .action-button:hover { background-color: #cce0ff; }
+
+        .standings-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+        .standings-table th, .standings-table td { padding: 0.75rem 0.5rem; text-align: center; }
+        .standings-table th { background-color: #e3f2fd; color: #1a73e8; font-weight: 700; border-bottom: 1px solid #cce0ff; }
+        .standings-table td { border-bottom: 1px solid #ddd; }
+        .standings-table tr:nth-child(even) { background-color: #f8fbff; }
+        .footer { background-color: #1a73e8; color: #fff; padding: 1.5rem; text-align: center; font-size: 0.9rem; box-shadow: 0 -4px 6px rgba(0,0,0,0.1); margin-top: 2rem; }
+
+        @media (max-width: 900px) {
+            .main-grid { grid-template-columns: 1fr; }
+            .grid-item.standings { grid-row: auto; }
+            .left-column { gap: 2rem; }
+            .game-item { flex-direction: column; align-items: stretch; }
+            .game-meta, .game-teams, .game-actions { width: 100%; justify-content: center; }
+            .game-teams { flex-direction: column; gap: 1rem; }
+            .vs-status { margin: 1rem 0; }
+        }
+    </style>
+</head>
+<body>
+<header class="header">
+    <nav class="navbar container">
+        <a href="/" class="logo">규칙 판정소</a>
+        <ul class="nav-links">
+            <li><a href="/judge/strike_ball">스트라이크-볼</a></li>
+            <li><a href="/judge/foul_fair">파울-페어</a></li>
+            <li><a href="/judge/foul_missswing">파울-헛스윙</a></li>
+            <li><a href="/judge/safe_out">세이프-아웃</a></li>
+            <li><a href="/baseball_news">야구 소식</a></li>
+            <li><a href="/report">연구 보고서</a></li>
+        </ul>
+    </nav>
+</header>
+<main class="main-content container">
+    <div class="main-grid">
+        <div class="left-column">
+            <div class="grid-item news">
+                <h2 class="section-title">KBO 뉴스</h2>
+                <div class="news-list-container">
+                    <a th:each="news : ${newsList}" th:href="@{${news.url}}" class="news-item" th:if="${news.title != null and news.url != null}">
+                        <p class="news-title" th:text="${news.title}">KBO 리그, 새로운 외국인 선수 영입하며 전력 강화</p>
+                        <p class="news-date" th:text="${news.date}">2025.09.11</p>
+                    </a>
+                </div>
+            </div>
+            <div class="grid-item games">
+                <h2 class="section-title">오늘의 경기
+                    <span class="game-date" th:text="${todayDate}">2025. 09. 13</span></h2>
+                <div class="game-list">
+                    <div th:each="game : ${scheduleList}" class="game-item" th:if="${game.home_team != null and game.away_team != null}">
+                        <div class="game-meta">
+                            <span class="time" th:text="${game.time != null ? game.time : '-'}">17:00</span>
+                            <span class="stadium" th:text="${game.stadium != null ? game.stadium : '장소 미정'}">잠실</span>
+                        </div>
+                        <div class="game-teams">
+                            <div class="team-info">
+                                <img th:src="@{'/images/' + ${game.home_team.toLowerCase()} + '.png'}" alt="Home Team Logo" class="team-logo-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/50?text=H';" />
+                                <span class="team-name" th:text="${game.home_team}">홈팀</span>
+                                <span class="pitcher-name" th:text="${game.home_pitcher != null ? game.home_pitcher : '투수 미정'}">선발 투수</span>
+                            </div>
+                            <div class="vs-status">
+                                <span class="vs-text">vs</span>
+                                <span class="game-status" th:text="${game.status != null ? game.status : '상태 미정'}">예정</span>
+                            </div>
+                            <div class="team-info">
+                                <img th:src="@{'/images/' + ${game.away_team.toLowerCase()} + '.png'}" alt="Away Team Logo" class="team-logo-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/50?text=A';" />
+                                <span class="team-name" th:text="${game.away_team}">원정팀</span>
+                                <span class="pitcher-name" th:text="${game.away_pitcher != null ? game.away_pitcher : '투수 미정'}">선발 투수</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div th:if="${#lists.isEmpty(scheduleList)}" class="game-item" style="justify-content: center; color: #777;">
+                        오늘 예정된 경기가 없습니다.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="grid-item standings">
+            <h2 class="section-title">야구 순위</h2>
+            <div class="standings-content">
+                <div class="standings-table-container">
+                    <table class="standings-table">
+                        <thead>
+                        <tr>
+                            <th>순위</th>
+                            <th>팀명</th>
+                            <th>경기</th>
+                            <th>승</th>
+                            <th>패</th>
+                            <th>승률</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="rank, stat : ${rankingList}" th:if="${stat.index < 10}">
+                            <td th:text="${rank.rank}">1</td>
+                            <td th:text="${rank.name}">팀명</td>
+                            <td th:text="${rank.games}">경기</td>
+                            <td th:text="${rank.wins}">승</td>
+                            <td th:text="${rank.losses}">패</td>
+                            <td th:text="${rank.win_rate}">0.000</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer class="footer">
+    <p>코드브레이커스 AI @ All rights reserved.</p>
+</footer>
+</body>
+</html>

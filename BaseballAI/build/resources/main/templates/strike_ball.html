@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>스트라이크-볼 판정</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f0f4f8; /* 아주 연한 파란색 배경 */
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        .header {
+            background-color: #ffffff;
+            border-bottom: 3px solid #1a73e8; /* 진한 파란색 포인트 */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1a73e8;
+            text-decoration: none;
+        }
+        .nav-links {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        .nav-links li {
+            margin-left: 1.5rem;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 700;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+        .nav-links a:hover {
+            color: #1a73e8;
+        }
+        .strike-ball-content {
+            padding: 3rem 0;
+            text-align: center;
+        }
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a73e8;
+            margin-bottom: 1.5rem;
+        }
+        .intro-text {
+            font-size: 1.1rem;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 3rem;
+        }
+        .footer {
+            background-color: #1a73e8; /* 진한 파란색 */
+            color: #ffffff;
+            padding: 1.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+            box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 스트라이크-볼 페이지 스타일 */
+        .upload-container {
+            margin-top: 2rem;
+            padding: 2rem;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .upload-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        .upload-button {
+            background-color: #1a73e8;
+            color: #ffffff;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .upload-button:hover {
+            background-color: #155bb5;
+        }
+        .result-box {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background-color: #e3f2fd;
+            border: 2px solid #1a73e8;
+            border-radius: 10px;
+            width: 100%;
+            text-align: left;
+        }
+        .rules-section {
+            margin-top: 3rem;
+            text-align: left;
+        }
+        .rules-section h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1a73e8;
+            border-bottom: 2px solid #1a73e8;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .rules-section p {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+            }
+            .logo {
+                margin-bottom: 1rem;
+            }
+            .nav-links {
+                flex-direction: column;
+                align-items: center;
+            }
+            .nav-links li {
+                margin: 0.5rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- 내비게이션 바 -->
+<header class="header">
+    <nav class="navbar container">
+        <a href="/" class="logo">규칙 판정소</a>
+        <ul class="nav-links">
+            <li><a href="/judge/strike_ball">스트라이크-볼</a></li>
+            <li><a href="/judge/foul_fair">파울-페어</a></li>
+            <li><a href="/judge/foul_missswing">파울-헛스윙</a></li>
+            <li><a href="/judge/safe_out">세이프-아웃</a></li>
+            <li><a href="/baseball_news">야구 소식</a></li>
+
+            <li><a href="/report">연구 보고서</a></li>
+        </ul>
+    </nav>
+</header>
+
+<!-- 스트라이크-볼 페이지 컨텐츠 -->
+<main id="strike-ball-content" class="strike-ball-content container">
+    <h1 class="page-title">스트라이크-볼 판정 모델</h1>
+    <p class="intro-text">
+        야구 투구 영상을 업로드하면 AI가 스트라이크와 볼을 판정해 드립니다.
+    </p>
+
+    <div class="upload-container">
+        <p class="upload-text">사진을 입력하세요</p>
+        <input type="file" id="image-upload" accept="image/*" style="display: none;">
+        <button class="upload-button" onclick="document.getElementById('image-upload').click()">파일 업로드</button>
+
+        <div class="result-box">
+            <strong>판정 결과:</strong><br>
+            <span id="judgment-result"></span>
+        </div>
+    </div>
+
+    <div class="rules-section">
+        <h2>스트라이크와 볼의 규칙</h2>
+        <p>
+            <strong>스트라이크(Strike)</strong>는 다음과 같은 경우에 선언됩니다.
+        <ul>
+            <li>타자가 헛스윙을 했을 때</li>
+            <li>투구가 스트라이크 존을 통과했을 때</li>
+            <li>타자가 번트 자세를 취하고 투구가 스트라이크 존을 통과했을 때</li>
+            <li>타자가 번트를 시도했으나 투구가 파울 볼이 되었을 때 (투 스트라이크 이후에는 제외)</li>
+        </ul>
+        </p>
+        <p>
+            <strong>볼(Ball)</strong>은 다음과 같은 경우에 선언됩니다.
+        <ul>
+            <li>투구가 스트라이크 존을 벗어났을 때</li>
+            <li>투수가 투구 규칙을 위반했을 때 (보크)</li>
+            <li>타자가 정당한 이유 없이 타석을 벗어났을 때</li>
+        </ul>
+        </p>
+        <p>
+            판정 모델은 스트라이크 존을 기준으로 투구 궤적을 분석하여 결과를 제공합니다.
+        </p>
+    </div>
+</main>
+
+<!-- 푸터 -->
+<footer class="footer">
+    <p>코드브레이커스 AI @ All rights reserved.</p>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // 이미지 업로드 기능 (예시)
+        const imageUpload = document.getElementById('image-upload');
+        const judgmentResult = document.getElementById('judgment-result');
+        imageUpload.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    // 실제 판정 로직 대신 간단한 예시 결과를 표시
+                    const isStrike = Math.random() > 0.5;
+                    const resultText = isStrike ? '스트라이크!' : '볼!';
+                    const resultColor = isStrike ? '#1a73e8' : '#e8731a';
+
+                    judgmentResult.innerHTML = `
+                            <p style="font-size: 1.5rem; font-weight: bold; color: ${resultColor};">
+                                ${resultText}
+                            </p>
+                            <img src="${event.target.result}" alt="Uploaded image" style="max-width: 100%; margin-top: 1rem; border-radius: 10px;">
+                        `;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
